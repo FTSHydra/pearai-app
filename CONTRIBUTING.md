@@ -22,11 +22,54 @@ After cloning and building the repo, check out our [issues list](https://github.
 
 Ensure you have the following tools installed:
 
+### Rust
+
 - 🦀 [Rust/Cargo](https://www.rust-lang.org/tools/install)
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source $HOME/.cargo/env
+```
+### Git
 - 🐙 [Git](https://git-scm.com)
+```bash
+apt-get install git
+```
+
+### Node
 - 🌐 [Node.JS](https://nodejs.org/en/), **x64**, version `=20.X.X`
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# Install Node.js
+nvm install 20
+nvm use 20
+```
+### Yarn
 - 📦 [Yarn 1](https://classic.yarnpkg.com/en/), version `>=1.10.1 and <2`
+```bash
+npm install -g yarn@1
+
+```
+### Python 3.11
 - 🐍 [Python](https://www.python.org/downloads/), version `=3.11.X` (required for node-gyp)
+```bash
+mkdir $HOME/python_install && cd $HOME/python_install
+wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
+tar xzf Python-3.11.0.tgz
+cd Python-3.11.0
+./configure --enable-optimizations --prefix=$HOME/.local --with-ensurepip=install
+make -j $(nproc)
+DEBIAN_FRONTEND=noninteractive make altinstall
+cd $HOME
+rm -rf python_install
+
+# Add Python 3.11 to PATH and create an alias
+echo 'export PATH=$HOME/.local/bin:$PATH' >> $HOME/.bashrc
+echo 'alias python=python3.11' >> $HOME/.bashrc
+echo 'alias python3=python3.11' >> $HOME/.bashrc
+echo 'alias pip=pip3.11' >> $HOME/.bashrc
+echo 'alias pip3=pip3.11' >> $HOME/.bashrc
+source $HOME/.bashrc
+```
 - ⚙️ A C/C++ compiler toolchain for your platform:
   - **Windows**: Install the Windows Build Tools and follow the detailed setup steps.
   - **macOS**: Install Xcode and Command Line Tools with `xcode-select --install`.
