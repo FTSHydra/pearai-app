@@ -179,7 +179,6 @@ execute "git checkout main" "Failed to checkout main branch"
 execute "git fetch origin" "Failed to fetch latest changes from origin"
 
 # Make sure the submodule has the latest updates
-execute "npm -v" "Failed to get npm version"
 execute "git pull origin main" "Failed to pull latest changes from origin/main"
 
 execute "./scripts/install-and-build.sh" "Failed to install dependencies for the submodule"
