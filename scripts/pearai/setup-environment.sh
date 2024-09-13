@@ -6,6 +6,21 @@ if [ ! -d ".git" ] || [ ! -f "package.json" ] || ! grep -q '"name": "pearai"' pa
     exit 1
 fi
 
+
+
+# Function to check the operating system
+check_os() {
+  case "$(uname -s)" in
+    Linux*)     os="Linux";;
+    Darwin*)    os="Mac";;
+    CYGWIN*|MINGW32*|MSYS*|MINGW*) os="Windows";;
+    *)          os="Unknown";;
+  esac
+}
+
+check_os
+printf "\n\nDetected operating system: $os\n\n"
+
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
@@ -82,6 +97,15 @@ else
     missing_deps+=("Python")
 fi
 
+# Check xcode-select on macOS
+if [ "$os" == "Mac" ]; then
+    if ! command -v xcode-select &> /dev/null; then
+        echo "xcode-select is not installed. Please install Xcode Command Line Tools."
+        echo "You can install it by running: xcode-select --install"
+        exit 1
+    fi
+fi
+
 # Print missing dependencies and exit if any are missing
 if [ ${#missing_deps[@]} -ne 0 ]; then
     echo -e "\nMissing or incorrect version of dependencies:"
@@ -92,19 +116,6 @@ if [ ${#missing_deps[@]} -ne 0 ]; then
 fi
 
 echo -e "\nAll dependencies are satisfied."
-
-# Function to check the operating system
-check_os() {
-  case "$(uname -s)" in
-    Linux*)     os="Linux";;
-    Darwin*)    os="Mac";;
-    CYGWIN*|MINGW32*|MSYS*|MINGW*) os="Windows";;
-    *)          os="Unknown";;
-  esac
-}
-
-check_os
-printf "\n\nDetected operating system: $os\n\n"
 
 # If the OS is Windows, give warning and prompt user to continue
 if [ "$os" == "Windows" ]; then
@@ -117,6 +128,8 @@ if [ "$os" == "Windows" ]; then
     	exit
   	fi
 fi
+
+
 
 
 # Function to execute a command and check its status
@@ -146,11 +159,8 @@ if [ -d "$app_dir/extensions/pearai-submodule" ]; then
 fi
 
 # Clone the submodule extension folder
-echo "Initializing git submodules (this may take a while)..."
-execute "git submodule update --init --recursive --progress" "Failed to initialize git submodules"
-
-echo "Updating to latest tip of submodule (this may take a while)..."
-execute "git submodule update --recursive --remote --progress" "Failed to update to latest tip of submodule"
+execute "git submodule update --init --recursive" "Failed to initialize git submodules"
+execute "git submodule update --recursive --remote" "Failed to update to latest tip of submodule"
 
 
 # Check if the symbolic link exists
@@ -192,4 +202,3 @@ echo -e "\nSetting up root application..."
 pwd
 
 execute "yarn install" "Failed to install dependencies with yarn"
-echo -e "\nEnvironment setup complete..."
