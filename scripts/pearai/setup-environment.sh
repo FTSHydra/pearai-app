@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ ! -d ".git" ] || [ ! -f "package.json" ] || ! grep -q '"name": "pearai"' package.json; then
+    echo "Error: This script must be run from the root of the pearai-app git directory."
+	echo "./scripts/pearai/setup-environment.sh"
+    exit 1
+fi
+
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
