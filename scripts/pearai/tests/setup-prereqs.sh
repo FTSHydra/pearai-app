@@ -45,8 +45,6 @@ rustc --version
 
 #Test Environment build
 # Checkout git and branch
-GIT_URL=$(git config --get remote.origin.url)
-REPO_OWNER=$(echo $GIT_URL | sed -E 's|https://github.com/([^/]+)/.*|\1|')
 git clone https://github.com/$REPO_OWNER/pearai-app.git
 cd pearai-app
 git checkout $CURRENT_BRANCH
