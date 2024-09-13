@@ -22,10 +22,15 @@ else
     echo "Docker image 'pearai-test-setup' already exists. Skipping build step."
 fi
 
+GIT_URL=$(git config --get remote.origin.url)
+REPO_OWNER=$(echo $GIT_URL | sed -E 's|https://github.com/([^/]+)/.*|\1|')
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 docker run -it --rm \
   --name pearai-test-setup \
   -w /workspace \
-  -e CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD) \
+  -e CURRENT_BRANCH=$CURRENT_BRANCH \
+  -e REPO_OWNER=$REPO_OWNER \
   -v "$(pwd)/setup-prereqs.sh:/workspace/setup-prereqs.sh" \
   pearai-test-setup \
   /bin/bash -c "/workspace/setup-prereqs.sh"
